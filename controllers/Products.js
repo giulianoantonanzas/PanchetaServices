@@ -1,9 +1,18 @@
 const res = require("express/lib/response");
 const db = require("../models");
+const ProductImage = require("../models/productimage");
 
 const getAll = async () => {
   try {
-    const products = await db.Product.findAll();
+    const products = await db.Product.findAll({
+      include: [
+        {
+          model: db.ProductImage,
+          required: false,
+        },
+      ],
+    });
+
     return products;
   } catch (error) {}
 };
@@ -25,12 +34,23 @@ const remove = async (id) => {
       },
     });
 
-    const response =
-      deletedProduct === 0
-        ? res.status(404).send({ message: "resource not found" })
-        : res.status(201).send({ message: "success" });
+    const response = deletedProduct
+      ? { message: "success", code: 201 }
+      : { message: "resource not found", code: 404 };
 
     return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+const update = async (body) => {
+  try {
+    const updatedProduct = await db.Product.update(body, {
+      where: { id: body.id },
+    });
+
+    return updatedProduct;
   } catch (error) {
     return error;
   }
@@ -40,4 +60,5 @@ module.exports = {
   getAll,
   create,
   remove,
+  update,
 };
