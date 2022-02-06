@@ -4,7 +4,10 @@ const ProductImage = require("./productimage");
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
-      Product.hasMany(models.ProductImage, { foreignKey: "product_id" });
+      Product.hasMany(models.ProductImage, {
+        foreignKey: "product_id",
+        onDelete: "cascade",
+      });
     }
   }
   Product.init(

@@ -1,6 +1,6 @@
 const res = require("express/lib/response");
 const db = require("../models");
-const ProductImage = require("../models/productimage");
+const ProductImage = require("../controllers/productimage");
 
 const getAll = async () => {
   try {
@@ -17,10 +17,22 @@ const getAll = async () => {
   } catch (error) {}
 };
 
-const create = async (body) => {
+const create = async (body, files) => {
   try {
+    if (!files) {
+      const error = new Error("Please upload a file");
+      error.httpStatusCode = 400;
+      return next(error);
+    }
+
     const newProduct = await db.Product.create(body);
-    return newProduct;
+
+    const createdImages = await ProductImage.create(newProduct.id, files);
+
+    return {
+      newProduct,
+      createdImages,
+    };
   } catch (error) {
     return error;
   }
@@ -28,6 +40,8 @@ const create = async (body) => {
 
 const remove = async (id) => {
   try {
+    await ProductImage.deleteImagesByProductId(id);
+
     const deletedProduct = await db.Product.destroy({
       where: {
         id,
@@ -56,9 +70,25 @@ const update = async (body) => {
   }
 };
 
+const findById = async (id) => {
+  try {
+    const product = await db.Product.findByPk(id, {
+      include: [
+        {
+          model: db.ProductImage,
+          required: false,
+        },
+      ],
+    });
+
+    return product;
+  } catch (error) {}
+};
+
 module.exports = {
   getAll,
   create,
   remove,
   update,
+  findById,
 };

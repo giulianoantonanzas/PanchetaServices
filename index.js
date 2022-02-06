@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ProductRoutes = require("./routes/Products");
 
+const uploader = require("./middlewares/uploader");
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
