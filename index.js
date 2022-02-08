@@ -1,9 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ProductRoutes = require("./routes/Products");
-
-const uploader = require("./middlewares/uploader");
-
+const User = require("./routes/User");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -14,3 +12,4 @@ app.listen(4800, () => {
 });
 
 app.use("/api/products/", ProductRoutes);
+app.use("/api/", User)
