@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "pancheta",
-    "password": "pancheta",
+    "username": "root",
+    "password": "root",
     "database": "pancheta_db",
     "host": "localhost",
     "dialect": "mysql"

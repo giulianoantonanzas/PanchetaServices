@@ -1,22 +1,31 @@
-const res = require("express/lib/response");
 const db = require("../models");
 const ProductImage = require("../controllers/productimage");
 
-const getAll = async () => {
+/**
+ @description get all products
+ @param {number} currentPage current page on you stay
+ */
+const getAll = async (currentPage) => {
+  let limit = currentPage ? 10 : null
+  let offset = currentPage ? (0 + (currentPage - 1) * limit) : null
   try {
-    const products = await db.Product.findAll({
+    return await db.Product.findAll({
       include: [
         {
           model: db.ProductImage,
           required: false,
         },
       ],
+      limit,
+      offset
     });
-
-    return products;
-  } catch (error) {}
+  } catch (error) { }
 };
 
+/**
+ * @param {{name:string, description?:string, price?:number, stock?:number}} body
+ * @param {{path:string, mimetype:string, fieldname:string}[]} files
+ */
 const create = async (body, files) => {
   try {
     if (!files) {
@@ -38,6 +47,9 @@ const create = async (body, files) => {
   }
 };
 
+/**
+ * @description remove product from id and images from productImages 
+*/
 const remove = async (id) => {
   try {
     await ProductImage.deleteImagesByProductId(id);
@@ -48,31 +60,37 @@ const remove = async (id) => {
       },
     });
 
-    const response = deletedProduct
+    return deletedProduct
       ? { message: "success", code: 201 }
       : { message: "resource not found", code: 404 };
 
-    return response;
   } catch (error) {
     return error;
   }
 };
 
+
+/**
+ * @param {{name:string, description?:string, price?:number, stock?:number}} body
+ */
 const update = async (body) => {
   try {
-    const updatedProduct = await db.Product.update(body, {
+    return await db.Product.update(body, {
       where: { id: body.id },
     });
 
-    return updatedProduct;
   } catch (error) {
     return error;
   }
 };
 
+
+/**
+ * @description get a product by id 
+*/
 const findById = async (id) => {
   try {
-    const product = await db.Product.findByPk(id, {
+    return await db.Product.findByPk(id, {
       include: [
         {
           model: db.ProductImage,
@@ -80,9 +98,7 @@ const findById = async (id) => {
         },
       ],
     });
-
-    return product;
-  } catch (error) {}
+  } catch (error) { return error }
 };
 
 module.exports = {
