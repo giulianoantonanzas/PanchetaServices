@@ -6,8 +6,8 @@ const ProductImage = require("../controllers/productimage");
  @param {number} currentPage current page on you stay
  */
 const getAll = async (currentPage) => {
-  let limit = 10
-  let offset = 0 + (currentPage - 1) * limit
+  let limit = currentPage ? 10 : null
+  let offset = currentPage ? (0 + (currentPage - 1) * limit) : null
   try {
     return await db.Product.findAll({
       include: [
