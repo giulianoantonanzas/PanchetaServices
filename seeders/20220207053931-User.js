@@ -5,7 +5,6 @@ const { jwtSECRET } = require('../constants');
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    console.log("entro");
     await queryInterface.bulkInsert(
       "Users",
       [

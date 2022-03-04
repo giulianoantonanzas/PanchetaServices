@@ -2,7 +2,7 @@ const express = require("express");
 const { create, login } = require("../controllers/User");
 const userRouter = express.Router();
 
-userRouter.get("/login", (req, res) => {
+userRouter.post("/login", (req, res) => {
     return login(req.body).then(response => res.json(response))
 });
 
