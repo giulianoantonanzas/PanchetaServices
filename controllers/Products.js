@@ -23,12 +23,12 @@ const getAll = async (currentPage, filter) => {
       ],
       ...(filter
         ? {
-          where: {
-            name: {
-              [Op.like]: `%${filter}%`,
+            where: {
+              name: {
+                [Op.like]: `%${filter}%`,
+              },
             },
-          },
-        }
+          }
         : null),
       page: currentPage,
       paginate: 10,
@@ -38,7 +38,7 @@ const getAll = async (currentPage, filter) => {
       pages,
       total,
     };
-  } catch (error) { }
+  } catch (error) {}
 };
 
 /**
@@ -107,8 +107,9 @@ const update = async (id, body, files) => {
 
     //si no encuentra la imagen en el listado, se elimina el archivo
     if (body?.productImages) {
-      const imagesForRemove = product?.ProductImages?.filter((productImage) =>
-        !body.productImages?.find((imageId) => imageId == productImage.id)
+      const imagesForRemove = product?.ProductImages?.filter(
+        (productImage) =>
+          !body.productImages?.find((imageId) => imageId == productImage.id)
       );
 
       if (imagesForRemove)

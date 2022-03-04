@@ -21,7 +21,7 @@ const create = async (product_id, imgArray) => {
 };
 
 /**
- * @param {number} product_id 
+ * @param {number} product_id
  * @returns {{path:string, mimetype:string, fieldname:string}}
  */
 const deleteImagesByProductId = async (product_id) => {
@@ -34,21 +34,21 @@ const deleteImagesByProductId = async (product_id) => {
   producTImages.forEach(async (img) => {
     unlinkAsync(process.env.PWD + "/public/" + img.path);
   });
-  return producTImages
+  return producTImages;
 };
 
 /**
- * @param {number} id 
+ * @param {number} id
  * @param {string | undefined} path
  * @returns {{path:string, mimetype:string, fieldname:string}}
  */
 const removeImageById = async (id) => {
-  const productimage = db.ProductImage.findByPk(id)
+  const productimage = db.ProductImage.findByPk(id);
   await db.ProductImage.destroy({
     where: {
       id,
-    }
-  })
+    },
+  });
 
   if (productimage?.path) {
     try {
@@ -58,8 +58,8 @@ const removeImageById = async (id) => {
     }
   }
 
-  return productimage
-}
+  return productimage;
+};
 
 module.exports = {
   create,

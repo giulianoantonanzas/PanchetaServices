@@ -7,12 +7,12 @@ const {
   findById,
 } = require("../controllers/Products");
 const uploader = require("../middlewares/uploader");
-const auth = require('../middlewares/auth')
+const auth = require("../middlewares/auth");
 const ProductRoutes = express.Router();
-const url = require('url');
+const url = require("url");
 
 ProductRoutes.get("/", function (req, res) {
-  const { page: currentPage, filter } = url.parse(req.url, true).query
+  const { page: currentPage, filter } = url.parse(req.url, true).query;
   return getAll(currentPage, filter).then((data) => res.json(data));
 });
 
@@ -32,15 +32,20 @@ ProductRoutes.post(
   uploader?.array("files", 10),
   function (req, res) {
     const files = req.files;
-    return create(req.body, files).then((data) =>
-      res.json(data)
-    );
+    return create(req.body, files).then((data) => res.json(data));
   }
 );
 
-ProductRoutes.put("/:id", auth, uploader?.array("files", 10), function (req, res) {
-  const files = req.files;
-  return update(req.params.id, req.body, files).then((data) => res.status(data.code).send(data));
-});
+ProductRoutes.put(
+  "/:id",
+  auth,
+  uploader?.array("files", 10),
+  function (req, res) {
+    const files = req.files;
+    return update(req.params.id, req.body, files).then((data) =>
+      res.status(data.code).send(data)
+    );
+  }
+);
 
 module.exports = ProductRoutes;
