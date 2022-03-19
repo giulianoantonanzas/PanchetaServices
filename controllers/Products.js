@@ -23,12 +23,12 @@ const getAll = async (currentPage, filter) => {
       ],
       ...(filter
         ? {
-            where: {
-              name: {
-                [Op.like]: `%${filter}%`,
-              },
+          where: {
+            name: {
+              [Op.like]: `%${filter}%`,
             },
-          }
+          },
+        }
         : null),
       page: currentPage,
       paginate: 10,
@@ -38,7 +38,9 @@ const getAll = async (currentPage, filter) => {
       pages,
       total,
     };
-  } catch (error) {}
+  } catch (error) {
+    return { code: 400, message: error };
+  }
 };
 
 /**
@@ -60,9 +62,10 @@ const create = async (body, files) => {
     return {
       newProduct,
       createdImages,
+      mercadoPagoRepsonse,
     };
   } catch (error) {
-    return error;
+    return { code: 400, message: error };
   }
 };
 
@@ -84,7 +87,7 @@ const remove = async (id) => {
       ? { message: "success", code: 201 }
       : { message: "resource not found", code: 404 };
   } catch (error) {
-    return error;
+    return { code: 400, message: error };
   }
 };
 
@@ -120,7 +123,6 @@ const update = async (id, body, files) => {
 
     return { code: 200, message: `product ${id} updated`, data: product };
   } catch (error) {
-    console.log(error);
     return { code: 400, message: error };
   }
 };
@@ -140,7 +142,7 @@ const findById = async (id) => {
       ],
     });
   } catch (error) {
-    return error;
+    return { code: 400, message: error };
   }
 };
 

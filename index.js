@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const ProductRoutes = require("./routes/Products");
-const productImageRoute = require("./routes/ProductImage");
+const productRoutes = require("./routes/Products");
+const paymentRoutes = require("./routes/Payment");
+const productImageRoutes = require("./routes/ProductImage");
 const User = require("./routes/User");
 const app = express();
 const cors = require("cors");
@@ -17,6 +18,7 @@ app.listen(4800, () => {
 //images routes
 app.use(express.static(`${__dirname}/public`));
 
-app.use("/api/products/", ProductRoutes);
-app.use("/api/image-product/", productImageRoute);
+app.use("/api/payment/", paymentRoutes);
+app.use("/api/products/", productRoutes);
+app.use("/api/image-product/", productImageRoutes);
 app.use("/api/", User);
