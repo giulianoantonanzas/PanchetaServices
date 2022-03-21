@@ -1,12 +1,17 @@
 const express = require("express");
+const { generatePayment, getPayments } = require("../controllers/Payment");
 const paymentRoutes = express.Router();
 
 paymentRoutes.post("/generatePayment", function (req, res) {
-  const product = req.body.products;
-  const userInfo = req.body.userInfo;
-  return generatePayment(product, userInfo).then((data) =>
+  const { products, userInfo } = req.body;
+  return generatePayment(products, userInfo).then((data) =>
     res.json(data.response || data)
   );
 });
 
-module.exports = paymentRoutes
+paymentRoutes.get("/", function (_, res) {
+  return getPayments().then((data) => res.json(data));
+});
+
+
+module.exports = paymentRoutes;

@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   getAll,
+  getAllByAdmin,
   create,
   remove,
   update,
@@ -14,6 +15,11 @@ const url = require("url");
 productRoutes.get("/", function (req, res) {
   const { page: currentPage, filter } = url.parse(req.url, true).query;
   return getAll(currentPage, filter).then((data) => res.json(data));
+});
+
+productRoutes.get("/admin", function (req, res) {
+  const { page: currentPage, filter } = url.parse(req.url, true).query;
+  return getAllByAdmin(currentPage, filter).then((data) => res.json(data));
 });
 
 productRoutes.get("/:id", function (req, res) {

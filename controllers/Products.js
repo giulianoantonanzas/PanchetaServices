@@ -43,6 +43,41 @@ const getAll = async (currentPage, filter) => {
   }
 };
 
+
+/**
+ @description get all products paginated
+ @param {number} currentPage current page on you stay
+ @param {string} filter filter for a name to product
+ */
+const getAllByAdmin = async (currentPage, filter) => {
+  try {
+    const {
+      docs: data,
+      pages,
+      total,
+    } = await db.Product.paginate({
+      ...(filter
+        ? {
+          where: {
+            name: {
+              [Op.like]: `%${filter}%`,
+            },
+          },
+        }
+        : null),
+      page: currentPage,
+      paginate: 10,
+    });
+    return {
+      data,
+      pages,
+      total,
+    };
+  } catch (error) {
+    return { code: 400, message: error };
+  }
+};
+
 /**
  * @param {{name:string, description?:string, price?:number, stock?:number}} body
  * @param {{path:string, mimetype:string, fieldname:string}[]} files
@@ -148,6 +183,7 @@ const findById = async (id) => {
 
 module.exports = {
   getAll,
+  getAllByAdmin,
   create,
   remove,
   update,

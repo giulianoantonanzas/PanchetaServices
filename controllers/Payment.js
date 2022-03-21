@@ -1,5 +1,3 @@
-const db = require("../models");
-const Sequelize = require("sequelize");
 const mercadopago = require("mercadopago");
 const { mercadoPagoAccessToken } = require("../constants");
 
@@ -13,8 +11,9 @@ mercadopago.configure({
  */
 const generatePayment = async (products, userInfo) => {
     try {
-        return await mercadopago?.preferences.create({
+        return await mercadopago.preferences.create({
             items: products.map((product) => ({
+                id: product.id,
                 title: product.name,
                 description: product.description,
                 quantity: 1,
@@ -23,14 +22,26 @@ const generatePayment = async (products, userInfo) => {
             })),
             payer: {
                 name: `${userInfo.firstName} ${userInfo.lastName}`,
-                address: userInfo.address,
-                phone: userInfo.number,
+                address: { street_name: userInfo.address },
                 email: userInfo.email,
             },
+            additional_info: `number ${userInfo.number}`
         });
     } catch (error) {
         return { code: 400, message: error.message };
     }
 };
 
-module.exports = { generatePayment };
+
+/**
+ * @description get all payments
+ */
+const getPayments = async () => {
+    try {
+        return await mercadopago.payment.search();
+    } catch (error) {
+        return { code: 400, message: error.message };
+    }
+};
+
+module.exports = { generatePayment, getPayments };
